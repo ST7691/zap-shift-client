@@ -9,7 +9,7 @@ const ServiceCard = ({ service }) => {
         <div className="text-[#FD8087] text-4xl mb-4">
           <Icon />
         </div>
-        <h2 className="card-title text-lg font-semibold">{title}</h2>
+        <h2 className="card-title text-black text-lg font-semibold">{title}</h2>
         <p className="text-sm text-gray-500">{description}</p>
       </div>
     </div>

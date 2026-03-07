@@ -4,13 +4,13 @@ const HowItWorksCard = ({ item }) => {
   const { icon: Icon, title, description } = item;
 
   return (
-    <div className="card items-start bg-white shadow-md hover:shadow-xl transition duration-300 border">
-      <div className="card-body ">
-        <div className="text-primary items-center text-center text-4xl mb-4">
+    <div className="card mb-4 bg-base-100 shadow-md hover:shadow-xl transition duration-300 ">
+      <div className="items-start ">
+        <div className="text-primary text-4xl">
           <Icon />
         </div>
-        <h3 className="card-title text-lg text-black font-semibold">{title}</h3>
-        <p className="text-sm text-gray-500">{description}</p>
+        <h3 className=" text-lg text-secondary font-semibold">{title}</h3>
+        <p className="text-sm text-accent">{description}</p>
       </div>
     </div>
   );
