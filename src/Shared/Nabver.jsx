@@ -43,7 +43,7 @@ const Nabver = () => {
     { name: "Coverage", path: "/coverage" },
     { name: "Send A Parcel", path: "/sendparcel" },
     // user logged in হলে দেখাবে
-    ...(user ? [{ name: "DashBoard", path: "/dashboard" }] : []),
+    ...(user ? [{ name: "DashBoard", path: "/dashboard/myparcels" }] : []),
 
     { name: "About Us", path: "/about" },
   ];

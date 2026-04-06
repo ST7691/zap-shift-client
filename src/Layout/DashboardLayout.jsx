@@ -31,13 +31,10 @@ const DashboardLayout = () => {
               </svg>
             </label>
           </div>
-          <div className="mx-2 flex-1 px-2 lg:hidden">Dashboard</div>
+          <div className="mx-2 flex-1 px-2 lg:hidden">Dashboard </div>
         </div>{" "}
-        <div className="lg:ml-5 lg:mb-5 sm:hidden">
-          {" "}
-          <ZapShip></ZapShip>
-        </div>
         {/* Page content here */}
+        <ZapShip></ZapShip>
         <Outlet></Outlet>
       </div>
       {/* Page content here */}
@@ -50,9 +47,8 @@ const DashboardLayout = () => {
         ></label>
         <ul className="menu bg-base-200 min-h-full w-30 p-4">
           {/* Sidebar content here */}
-
           <li>
-            <NavLink>
+            <NavLink to={"/dashboard/myparcels"}>
               {" "}
               <CiHome />
               Home
