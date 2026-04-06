@@ -2,8 +2,17 @@ import { useForm } from "react-hook-form";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
 import { useState } from "react";
-
+import useAuth from "../hooks/useAuth";
+import UseAxiosSecure from "../hooks/UseAxiosSecure";
+// tracking id
+const generateTrackingID = () => {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const random = Math.floor(10000 + Math.random() * 90000);
+  return `ZP-${date}-${random}`;
+};
 const SendParcel = () => {
+  const { user } = useAuth();
+  const axiosSecure = UseAxiosSecure();
   const {
     register,
     handleSubmit,
@@ -27,7 +36,7 @@ const SendParcel = () => {
   // Get districts by region
   const getDistrictsByRegion = (region) =>
     servicesCenters.filter((w) => w.region === region).map((w) => w.district);
-// cost calculation
+  // cost calculation
   // const calculateCost = (data) => {
   //   let cost = 0;
   //   const location = data.deliveryLocation; // "within" or "outside"
@@ -53,85 +62,128 @@ const SendParcel = () => {
   //   return cost;
   // };
   // Form submit
- const onSubmit = (data) => {
-   const location = data.deliveryLocation;
-   let baseCost = 0;
-   let extraCost = 0;
-   let costBreakdown = "";
+  const onSubmit = (data) => {
+    const location = data.deliveryLocation;
+    let baseCost = 0;
+    let extraCost = 0;
+    let costBreakdown = "";
 
-   // Calculate pricing breakdown
-   if (data.type === "document") {
-     baseCost = location === "within" ? 60 : 80;
-     costBreakdown = `
-      <b>Parcel Type:</b> Document<br/>
-      <b>Delivery Location:</b> ${location === "within" ? "Within City" : "Outside City/District"}<br/>
-      <b>Base Cost:</b> ৳${baseCost}<br/>
+    // Pricing Calculation
+    if (data.type === "document") {
+      baseCost = location === "within" ? 60 : 80;
+
+      costBreakdown = `
+      <b>📦 Parcel Type:</b> Document <br/>
+      <p>📍 Delivery Location:</p> ${
+        location === "within" ? "Within City" : "Outside City/District"
+      } <br/>
+      <p>💰 Base Cost:</p> $${baseCost}
     `;
+    } else {
+      const weight = Number(data.weight || 0);
+
+      if (weight <= 3) {
+        baseCost = location === "within" ? 110 : 150;
+
+        costBreakdown = `
+        <b>📦 Parcel Type:</b> Non-Document <br/>
+        <p>⚖️ Weight:</p> ${weight} kg <br/>
+        <p>📍 Delivery Location:</p> ${
+          location === "within" ? "Within City" : "Outside City/District"
+        } <br/>
+        <p>💰 Base Cost:</p> $${baseCost}
+      `;
+      } else {
+        const extraKg = weight - 3;
+
+        if (location === "within") {
+          baseCost = 110;
+          extraCost = extraKg * 40;
+        } else {
+          baseCost = 150;
+          extraCost = extraKg * 40 + 40;
+        }
+
+        costBreakdown = `
+        <b>📦 Parcel Type:</b> Non-Document <br/>
+        <p>⚖️ Weight:</p> ${weight} kg <br/>
+        <p>📍 Delivery Location:</p> ${
+          location === "within" ? "Within City" : "Outside City/District"
+        } <br/>
+        <p>💰 Base Cost :</p> $${baseCost} <br/>
+        <p>➕ Extra Weight Cost (extraKg * 40 + 40):</p> $${extraCost}
+      `;
+      }
+    }
+
+    const totalCost = baseCost + extraCost;
+
+    Swal.fire({
+      title: `<strong>📊 Parcel Delivery Cost Breakdown</strong>`,
+      html: `
+      ${costBreakdown}
+      <hr/>
+      <h2 style="color:green">Total Cost:$ ${totalCost}</h2>
+    `,
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: "💳 Proceed to Payment",
+      cancelButtonText: "✏️ Edit Parcel",
+      width: "500px",
+    }).then((result) => {
+   if (result.isConfirmed) {
+     // Final Parcel Object
+     const parcelData = {
+       ...data,
+       deliveryCost: totalCost,
+       created_by: user?.email,
+       creation_date: new Date().toISOString(),
+       payment_status: "unpaid",
+       delivery_status: "not_collected",
+       tracking_id: generateTrackingID(),
+     };
+
+     console.log(parcelData);
+
+     // save to database
+     axiosSecure
+       .post("/parcels", parcelData)
+       .then((res) => {
+         if (res.data.insertedId) {
+           Swal.fire({
+             icon: "success",
+             title: "📦 Parcel Created Successfully",
+             html: `
+            <p>Your parcel request has been submitted.</p>
+            <b>Tracking ID</b>
+            <h2 style="color:green">${parcelData.tracking_id}</h2>
+          `,
+             confirmButtonText: "OK",
+           });
+
+           // reset form after success
+           reset();
+           setSelectedSenderRegion("");
+           setSelectedReceiverRegion("");
+         }
+       })
+       .catch((error) => {
+         Swal.fire({
+           icon: "error",
+           title: "❌ Failed to create parcel",
+           text: "Please try again later",
+         });
+
+         console.log(error);
+       });
    } else {
-     const weight = Number(data.weight || 0);
-     if (weight <= 3) {
-       baseCost = location === "within" ? 110 : 150;
-       costBreakdown = `
-        <b>Parcel Type:</b> Non-Document<br/>
-        <b>Weight:</b> ${weight} kg<br/>
-        <b>Delivery Location:</b> ${location === "within" ? "Within City" : "Outside City/District"}<br/>
-        <b>Base Cost:</b> ৳${baseCost}<br/>
-      `;
-     } else {
-       const extraKg = weight - 3;
-       if (location === "within") {
-         baseCost = 110;
-         extraCost = extraKg * 40;
-       } else {
-         baseCost = 150;
-         extraCost = extraKg * 40 + 40; // extra 40 for outside city
-       }
-       costBreakdown = `
-        <b>Parcel Type:</b> Non-Document<br/>
-        <b>Weight:</b> ${weight} kg<br/>
-        <b>Delivery Location:</b> ${location === "within" ? "Within City" : "Outside City/District"}<br/>
-        <b>Base Cost:</b> ৳${baseCost}<br/>
-        <b>Extra Cost (for weight):</b> ৳${extraCost}<br/>
-      `;
-     }
+     Swal.fire({
+       icon: "info",
+       title: "✏️ You can edit your parcel details",
+     });
    }
-
-   const totalCost = baseCost + extraCost;
-
-   Swal.fire({
-     title: `<strong>Parcel Deliver cost Breakdown</strong>`,
-     html: `${costBreakdown}<hr/><h2 style="color:green">Total: ৳${totalCost}</h2>`,
-     icon: "info",
-     showCancelButton: true,
-     confirmButtonText: "💵 Proceed to Payment",
-     cancelButtonText: "✏️ Edit Details",
-     width: "500px",
-   }).then((result) => {
-     if (result.isConfirmed) {
-       // User proceeds to payment
-       const parcelData = {
-         ...data,
-         cost: totalCost,
-         creation_date: new Date(),
-       };
-       console.log(parcelData);
-       Swal.fire({
-         icon: "success",
-         title: "Redirecting to Payment...",
-       });
-       reset();
-       setSelectedSenderRegion("");
-       setSelectedReceiverRegion("");
-     } else {
-       // User goes back to editing
-       Swal.fire({
-         icon: "info",
-         title: "You can edit your parcel details",
-       });
-     }
-   });
- };
-
+    });
+  };
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
       {/* Heading */}

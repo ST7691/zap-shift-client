@@ -1,8 +1,8 @@
 import React from "react";
-import { Link} from "react-router";
+// import { Link} from "react-router";
 import ZapShip from "./ZapShip";
 import useAuth from "../Pages/hooks/useAuth";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Nabver = () => {
@@ -39,11 +39,14 @@ const Nabver = () => {
   //   </>
   // );
   const links = [
-    {name:'Home',path:'/'},
-    {name:'Coverage',path:'/coverage'},
-    {name:'Send A Parcel',path:'/sendparcel'},
-    {name:'About Us',path:'/about'},
-  ]
+    { name: "Home", path: "/" },
+    { name: "Coverage", path: "/coverage" },
+    { name: "Send A Parcel", path: "/sendparcel" },
+    // user logged in হলে দেখাবে
+    ...(user ? [{ name: "DashBoard", path: "/dashboard" }] : []),
+
+    { name: "About Us", path: "/about" },
+  ];
   // log out ---------------
   const logout = () => {
     signOutUser()

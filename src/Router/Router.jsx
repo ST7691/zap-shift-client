@@ -8,9 +8,9 @@ import About from "../Pages/About/About";
 import Coverage from "../Pages/Coverage/coverage";
 import PrivetRoutes from "../Pages/Routes/PrivetRoutes";
 import SendParcel from "../Pages/SendParcel/SendParcel";
-
-
-
+import DashboardLayout from "../Layout/DashboardLayout";
+import MyParcels from "../Pages/Dashboard/MyParcels/MyParcels";
+import Payment from "../Pages/Dashboard/payment/Payment";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +41,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  // authlay out
   {
     path: "/",
     Component: AuthLayout,
@@ -48,5 +49,22 @@ export const router = createBrowserRouter([
       { path: "/signin", Component: SignIn },
       { path: "/signup", Component: SignUp },
     ],
+  },
+  // deshboard ----------
+  {
+    path: "/dashboard",
+    element: (
+      <PrivetRoutes>  <DashboardLayout></DashboardLayout>  </PrivetRoutes>
+    ),
+    children: [
+      {
+        path: 'myparcels',
+        Component: MyParcels
+      },
+      {
+        path: 'payment/:parcelId',
+        Component: Payment,
+      },
+    ]
   },
 ]);
