@@ -48,7 +48,7 @@ const DashboardLayout = () => {
         <ul className="menu bg-base-200 min-h-full w-30 p-4">
           {/* Sidebar content here */}
           <li>
-            <NavLink to={"/dashboard/myparcels"}>
+            <NavLink to={"/"}>
               {" "}
               <CiHome />
               Home

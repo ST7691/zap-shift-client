@@ -17,7 +17,7 @@ const MyParcels = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const axiosSecure = UseAxiosSecure();
-  // tanstack query use kore 
+  // tanstack query use kore
   const { data: parcels = [], refetch } = useQuery({
     queryKey: ["my_parcels", user.email],
     queryFn: async () => {
@@ -80,7 +80,25 @@ const MyParcels = () => {
   const handleUpdate = (parcel) => {
     navigate(`/updateParcel/${parcel._id}`);
   };
-
+  // handlepayment
+  const handlepayment = async(parcel) => {
+      const paymentInfo = {
+        deliveryCost: parcel.deliveryCost,
+        parcelId: parcel._id,
+        customer_email: parcel.created_by,
+        parcelName: parcel.parcelName,
+      };
+      try {
+        const res = await axiosSecure.post(
+          "/payment-checkout-session",
+          paymentInfo,
+        );
+        const { url } = res.data;
+        window.location.href = url;
+      } catch (error) {
+        console.error("Payment failed:", error);
+      }
+  };
   return (
     <div className="overflow-x-auto">
       <table className="table table-zebra w-full">
@@ -118,18 +136,21 @@ const MyParcels = () => {
                 </div>
               </td>
 
-
               <td className="font-semibold">{parcel.deliveryCost}</td>
               {/* payment status */}
               <td>
                 {parcel.payment_status === "paid" ? (
                   <span className="text-green-500">Paid</span>
                 ) : (
-                  <Link to={`/dashboard/payment/${parcel._id}`}>
-                    <button className="btn btn-xs btn-primary text-black">
-                      Pay
-                    </button>
-                  </Link>
+                  <button
+                    onClick={() => handlepayment(parcel)}
+                    className="btn btn-xs btn-primary text-black"
+                  >
+                    Pay
+                  </button>
+                  // <Link to={`/dashboard/payment/${parcel._id}`}>
+
+                  // </Link>
                 )}
               </td>
               <td>

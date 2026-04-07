@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
@@ -13,6 +13,7 @@ const generateTrackingID = () => {
 const SendParcel = () => {
   const { user } = useAuth();
   const axiosSecure = UseAxiosSecure();
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -150,6 +151,7 @@ const SendParcel = () => {
        .post("/parcels", parcelData)
        .then((res) => {
          if (res.data.insertedId) {
+           navigate("/dashboard/myparcels");
            Swal.fire({
              icon: "success",
              title: "📦 Parcel Created Successfully",
