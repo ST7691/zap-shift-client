@@ -45,7 +45,7 @@ const DashboardLayout = () => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu bg-base-200 min-h-full w-30 p-4">
+        <ul className="menu bg-base-200 min-h-full w-50 p-4">
           {/* Sidebar content here */}
           <li>
             <NavLink to={"/"}>
@@ -55,7 +55,13 @@ const DashboardLayout = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to={"/dashboard/myparcels"}>My Parcel</NavLink>
+            <NavLink to={"/dashboard/myparcels"}>My Parcels</NavLink>
+          </li>
+          <li>
+            <NavLink to={"/dashboard/payment-history"}>Payment History</NavLink>
+          </li>
+          <li>
+            <NavLink to={"/dashboard/approves-rider"}>Approves Rider</NavLink>
           </li>
         </ul>
       </div>

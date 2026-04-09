@@ -13,6 +13,9 @@ import MyParcels from "../Pages/Dashboard/MyParcels/MyParcels";
 import Payment from "../Pages/Dashboard/payment/Payment";
 import { PaymentSuccess } from "../Pages/Dashboard/payment/PaymentSuccess";
 import { PaymentCancelled } from "../Pages/Dashboard/payment/PaymentCancelled";
+import PaymentHistory from "../Pages/Dashboard/PaymentHistory/PaymentHistory";
+import Rider from "../Pages/Rider/Rider";
+import ApprovesRider from "../Pages/Dashboard/ApproveRider/ApprovesRider";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +29,15 @@ export const router = createBrowserRouter([
       {
         path: "/about",
         Component: About,
+      },
+      {
+        path: "/rider",
+        loader: () => fetch("../../public/data/districts.json"),
+        element: (
+          <PrivetRoutes>
+            <Rider></Rider>
+          </PrivetRoutes>
+        ),
       },
       {
         path: "/sendparcel",
@@ -66,6 +78,10 @@ export const router = createBrowserRouter([
         Component: MyParcels,
       },
       {
+        path: "payment-history",
+        Component: PaymentHistory,
+      },
+      {
         path: "payment/:parcelId",
         Component: Payment,
       },
@@ -76,6 +92,12 @@ export const router = createBrowserRouter([
       {
         path: "payment-cencelled",
         Component: PaymentCancelled,
+      },
+      {
+        path: "approves-rider",
+        element: (
+            <ApprovesRider></ApprovesRider>   
+        ),
       },
     ],
   },

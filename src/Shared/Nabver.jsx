@@ -45,6 +45,7 @@ const Nabver = () => {
     // user logged in হলে দেখাবে
     ...(user ? [{ name: "DashBoard", path: "/dashboard/myparcels" }] : []),
 
+    { name: "Be a Rider", path: "/rider" },
     { name: "About Us", path: "/about" },
   ];
   // log out ---------------
@@ -106,9 +107,9 @@ const Nabver = () => {
             ))}
           </ul>
         </div>
-        <a className=" text-xl">
+        <span className=" text-xl">
           <ZapShip></ZapShip>
-        </a>
+        </span>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">

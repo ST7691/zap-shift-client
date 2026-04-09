@@ -85,9 +85,11 @@ const MyParcels = () => {
       const paymentInfo = {
         deliveryCost: parcel.deliveryCost,
         parcelId: parcel._id,
-        customer_email: parcel.created_by,
+        // customer_email: parcel.created_by,
+        created_by: user.email, // 🔥 login user email
         parcelName: parcel.parcelName,
-      };
+    };
+    console.log("USER EMAIL:", user.email);
       try {
         const res = await axiosSecure.post(
           "/payment-checkout-session",
