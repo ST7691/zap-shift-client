@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoaing] = useState(true);
   const [user, setuser] = useState(null);
   // create user sign up
-  const creatUser = (email, password) => {
+  const creatUserRegister = (email, password) => {
     setLoaing(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
@@ -37,11 +37,9 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth,provider);
   };
   // update profile
- const updateUserProfile = (name, photo) => {
-   return updateProfile(auth.currentUser, {
-     displayName: name,
-     photoURL: photo,
-   });
+ const updateUserProfile = (profile) => {
+   return updateProfile(auth.currentUser,profile) 
+    
  };
   // observerv set
   useEffect(() => {
@@ -56,7 +54,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const authInfo = {
-    creatUser,
+    creatUserRegister,
     signInUser,
     signOutUser,
     signInWithGoogle,

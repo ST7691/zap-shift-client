@@ -1,113 +1,72 @@
-import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
 import Swal from "sweetalert2";
 import SocialLogin from "./SocialLogin/SocialLogin";
-import UseAxiosSecure from "../hooks/UseAxiosSecure";
+import axios from "axios";
 
 const SignUp = () => {
-  const { creatUser, updateUserProfile ,user} = useAuth();
+  const { creatUserRegister, updateUserProfile } = useAuth();
   const navigate = useNavigate();
-  const axiosSecure = UseAxiosSecure();
-
+  const from = location.state?.from || "/";
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
-  // File preview state
-  const [preview, setPreview] = useState(null);
-  const photoFile = watch("photoFile");
 
-  // Already logged in? Redirect to home
-  useEffect(() => {
-    if (user) {
-      navigate("/"); // already logged in -> home page
-    }
-  }, [user, navigate]);
-
-  // Watch photo file for preview
-  useEffect(() => {
-    if (photoFile && photoFile.length > 0) {
-      const file = photoFile[0];
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(file);
-    }
-  }, [photoFile]);
-
-  // Form submit
-  const onSubmit = async (data) => {
-    try {
-      //  Create user
-      const result = await creatUser(data.email, data.password);
-      console.log("User created:", result);
-
-      //  Upload photo (base64 for demo)
-      let photoURL = "";
-      if (data.photoFile && data.photoFile.length > 0) {
-        const file = data.photoFile[0];
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-          photoURL = reader.result;
-
-          // Save user to DB
-          // user info
-          const userInfo = {
-            email: data.email,
+  // handle on submit react hook form
+  const handleRgister = (data) => {
+    console.log(data);
+    console.log("after register ", data.photo[0]);
+    const profileImg = data.photo[0];
+    // create user firebase sign up
+    creatUserRegister(data.email, data.password)
+      .then((result) => {
+        console.log(result.user);
+        // form data store the img
+        const formData = new FormData();
+        formData.append("image", profileImg);
+        // img bb send the photo url
+        const imge_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_Key}`;
+        // axios
+        axios.post(imge_API_URL, formData).then((res) => {
+          console.log("after img uploade done", res.data.data.url);
+          // update user profie firebase
+          const userProfile = {
             displayName: data.name,
-            photoURL: photoURL,
-            role: "user", // VERY IMPORTANT
+            photoURL: res.data.data.url,
           };
-          axiosSecure.post("/users", userInfo)
-            .then((res) => {
-            if (res.data.insertedId) {
-              console.log("User saved in DB");
-            }
-          });
+          updateUserProfile;
+          userProfile
+            .then(() => {
+              console.log("user profile updated done");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
 
-          // Update Firebase profile
-          await updateUserProfile(data.name, photoURL);
-          Swal.fire({
-            position: "top",
-            icon: "success",
-            title: "Account created successfully",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-
-          navigate("/signin"); // redirect to login
-        };
-        reader.readAsDataURL(file);
-      } else {
-        // No photo
-        await updateUserProfile(data.name, "");
+        // alert
         Swal.fire({
           position: "top",
           icon: "success",
-          title: "Account created successfully",
+          title: "Log in  successfuly",
           showConfirmButton: false,
-          timer: 1500,
+          timer: 2000,
         });
-        navigate("/signin");
-      }
-    } catch (error) {
-      console.log(error);
-      Swal.fire({
-        icon: "error",
-        title: "Signup Failed",
-        text: error.message,
-      });
-    }
-  };
 
+        navigate(from);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
       <h1 className="text-4xl font-bold">Sign Up now!</h1>
       <div className="card-body">
-        <form onSubmit={handleSubmit(onSubmit)} className="fieldset">
+        <form onSubmit={handleSubmit(handleRgister)} className="fieldset">
           {/* Name */}
           <label className="label">Name</label>
           <input
@@ -117,6 +76,15 @@ const SignUp = () => {
             placeholder="Your Name"
           />
           {errors.name && <p className="text-red-500">Name is required</p>}
+          {/*image */}
+          <label className="label">Image</label>
+          <input
+            type="file"
+            {...register("photo", { required: true })}
+            className="file-input file-input-ghost"
+            placeholder="Your photo"
+          />
+          {errors.photo && <p className="text-red-500">Photo is required</p>}
 
           {/* Email */}
           <label className="label">Email</label>
@@ -147,21 +115,6 @@ const SignUp = () => {
             </p>
           )}
 
-          {/* Photo */}
-          <label className="label">Photo</label>
-          <input
-            type="file"
-            {...register("photoFile")}
-            className="file-input file-input-ghost w-full"
-          />
-          {preview && (
-            <img
-              src={preview}
-              alt="Preview"
-              className="w-24 h-24 rounded-full mt-2"
-            />
-          )}
-
           {/* Social Login */}
           <SocialLogin />
 
@@ -182,6 +135,6 @@ const SignUp = () => {
       </div>
     </div>
   );
-};;
+};
 
 export default SignUp;
