@@ -16,51 +16,89 @@ const SignUp = () => {
   } = useForm();
 
   // handle on submit react hook form
-  const handleRgister = (data) => {
-    console.log(data);
-    console.log("after register ", data.photo[0]);
-    const profileImg = data.photo[0];
-    // create user firebase sign up
-    creatUserRegister(data.email, data.password)
-      .then((result) => {
-        console.log(result.user);
-        // form data store the img
-        const formData = new FormData();
-        formData.append("image", profileImg);
-        // img bb send the photo url
-        const imge_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_Key}`;
-        // axios
-        axios.post(imge_API_URL, formData).then((res) => {
-          console.log("after img uploade done", res.data.data.url);
-          // update user profie firebase
-          const userProfile = {
-            displayName: data.name,
-            photoURL: res.data.data.url,
-          };
-          updateUserProfile;
-          userProfile
-            .then(() => {
-              console.log("user profile updated done");
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        });
+  // const handleRgister = async (data) => {
+  //   console.log(data);
+  //   console.log("after register ", data.photo[0]);
+  //   const profileImg = data.photo[0];
+  //   // create user firebase sign up
+  //   creatUserRegister(data.email, data.password)
+  //     .then((result) => {
+  //       console.log(result.user);
+  //       // form data store the img
+  //       const formData = new FormData();
+  //       formData.append("image", profileImg);
+  //       // img bb send the photo url
+  //       const imge_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_Key}`;
+  //       // axios
+  //    const imgRes =await axios.post(imge_API_URL, formData);
+  //       const imageUrl = imgRes.data.data.url;
+        
 
-        // alert
-        Swal.fire({
-          position: "top",
-          icon: "success",
-          title: "Log in  successfuly",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+  //   await updateUserProfile({
+  //     displayName: data.name,
+  //     photoURL: imageUrl,
+  //   });
+  //   const dbRes = await axios.post("http://localhost:5000/users", {
+  //     name: data.name,
+  //     email: data.email,
+  //     photo: imageUrl,
+  //   });
 
-        navigate(from);
-      })
-      .catch((error) => {
-        console.log(error);
+  //   console.log("DB SUCCESS:", dbRes.data);
+
+  //           // alert
+  //           Swal.fire({
+  //             position: "top",
+  //             icon: "success",
+  //             title: "Sign in  successfuly",
+  //             showConfirmButton: false,
+  //             timer: 2000,
+  //           });
+
+  //           navigate(from);
+  //         })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+  const handleRgister = async (data) => {
+    try {
+      const profileImg = data.photo[0];
+
+      await creatUserRegister(data.email, data.password);
+
+      const formData = new FormData();
+      formData.append("image", profileImg);
+
+      const imge_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_Key}`;
+
+      const imgRes = await axios.post(imge_API_URL, formData);
+      const imageUrl = imgRes.data.data.url;
+      const userInfo = {
+        displayName: data.name,
+        photoURL: imageUrl,
+      };
+      await updateUserProfile(userInfo);
+
+      const dbRes = await axios.post("http://localhost:5000/users", {
+        displayName: data.name,
+        email: data.email,
+        photo: imageUrl,
+        // role: "user",
       });
+
+      console.log("DB SUCCESS:", dbRes.data);
+
+      Swal.fire({
+        icon: "success",
+        title: "Sign up successful",
+        timer: 2000,
+      });
+
+      navigate(from);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">

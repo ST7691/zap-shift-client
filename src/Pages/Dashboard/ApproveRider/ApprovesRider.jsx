@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import UseAxiosSecure from "../../hooks/UseAxiosSecure";
 import { RiDeleteBinLine, RiEditLine, RiEyeLine } from "react-icons/ri";
-import { FaUserCheck } from "react-icons/fa";
+import { FaEye, FaUserCheck } from "react-icons/fa";
 import { IoPersonRemove } from "react-icons/io5";
 import Swal from "sweetalert2";
 
@@ -45,7 +45,7 @@ const ApprovesRider = () => {
     const handleDelete = (id) => {
       Swal.fire({
         title: "Are you sure?",
-        text: "You want to delete this parcel!",
+        text: "You want to delete thisRider!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, Delete",
@@ -53,7 +53,7 @@ const ApprovesRider = () => {
         if (result.isConfirmed) {
           axiosSecure.delete(`/riders/${id}`).then((res) => {
             if (res.data.deletedCount > 0) {
-              Swal.fire("Deleted!", "Parcel has been deleted.", "success");
+              Swal.fire("Deleted!", "Rider has been deleted.", "success");
               refetch();
             }
           });
@@ -93,6 +93,12 @@ const ApprovesRider = () => {
                   </p>
                 </td>
                 <td className="flex  gap-1">
+                  {/* view button  */}
+                  <button
+                    className="btn btn-xs  hover:bg-primary "
+                  >
+                    <FaEye />
+                  </button>
                   {/* approved button */}
                   <button
                     className="btn btn-xs  hover:bg-primary "

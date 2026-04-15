@@ -2,8 +2,11 @@ import React from "react";
 import ZapShip from "../Shared/ZapShip";
 import { NavLink, Outlet } from "react-router";
 import { CiHome } from "react-icons/ci";
+import UseRoles from "../Pages/hooks/UseRoles";
+import { FaAddressCard, FaBiking, FaRegUser, FaShuttleVan } from "react-icons/fa";
 
 const DashboardLayout = () => {
+  const {role} = UseRoles();
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -34,7 +37,10 @@ const DashboardLayout = () => {
           <div className="mx-2 flex-1 px-2 lg:hidden">Dashboard </div>
         </div>{" "}
         {/* Page content here */}
-        <ZapShip></ZapShip>
+        <div className="mb-5">
+          {" "}
+          <ZapShip></ZapShip>
+        </div>
         <Outlet></Outlet>
       </div>
       {/* Page content here */}
@@ -45,24 +51,75 @@ const DashboardLayout = () => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu bg-base-200 min-h-full w-50 p-4">
+        <ul className="menu w-40 bg-base-200 min-h-full p-4">
           {/* Sidebar content here */}
-          <li>
-            <NavLink to={"/"}>
-              {" "}
+          {/* home */}
+          <li className=" mt-5">
+            <NavLink
+              to={"/"}
+              className="is-drawer-close:tooltip is-drawer-close: tooltip-right"
+              data-tip="Home"
+            >
               <CiHome />
-              Home
+              <span className="is-drawer-close:hidden">Home</span>
             </NavLink>
           </li>
+          {/* my parcels */}
           <li>
-            <NavLink to={"/dashboard/myparcels"}>My Parcels</NavLink>
+            <NavLink
+              to={"/dashboard/myparcels"}
+              className="is-drawer-close:tooltip is-drawer-close: tooltip-right"
+              data-tip="My Parcels"
+            >
+              <FaShuttleVan />
+              <span className="is-drawer-close:hidden">My Parcel</span>
+            </NavLink>
           </li>
+          {/* payment history */}
           <li>
-            <NavLink to={"/dashboard/payment-history"}>Payment History</NavLink>
+            <NavLink
+              to={"/dashboard/payment-history"}
+              className="is-drawer-close:tooltip is-drawer-close: tooltip-right"
+              data-tip="Payment History"
+            >
+              <FaAddressCard />
+              <span className="is-drawer-close:hidden"> Payment History</span>
+            </NavLink>
           </li>
-          <li>
-            <NavLink to={"/dashboard/approves-rider"}>Approves Rider</NavLink>
-          </li>
+          {/* admin section */}
+          {role === "admin" && (
+            <>
+              {" "}
+              {/* approves riders */}
+              <li>
+                <NavLink
+                  to={"/dashboard/approves-rider"}
+                  className="is-drawer-close:tooltip is-drawer-close: tooltip-right"
+                  data-tip="Approves Rider"
+                >
+                  <FaBiking />{" "}
+                  <span className="is-drawer-close:hidden">
+                    {" "}
+                    Approves Rider
+                  </span>
+                </NavLink>
+              </li>
+              {/* users menagement */}
+              <li>
+                <NavLink
+                  to={"/dashboard/users-management"}
+                  className="is-drawer-close:tooltip is-drawer-close: tooltip-right"
+                  data-tip="Users Management"
+                >
+                  <FaRegUser />
+                  <span className="is-drawer-close:hidden">
+                    {" "}
+                    Users management
+                  </span>
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </div>

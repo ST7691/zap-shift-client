@@ -15,7 +15,7 @@ const SignIn = () => {
   const from = location.state?.from || '/'
   // form handle sign in -------
   const onSubmit = data =>{
-    console.log(data);
+    // console.log(data);
     // firebase signInUser
     signInUser(data.email, data.password)
       .then(result => {
