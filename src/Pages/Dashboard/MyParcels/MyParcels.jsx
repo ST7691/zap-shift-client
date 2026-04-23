@@ -11,7 +11,7 @@ import {
   RiDeleteBinLine,
   RiFileCopyLine,
 } from "react-icons/ri";
-import { Link } from "react-router";
+import { Link, Links } from "react-router";
 
 const MyParcels = () => {
   const navigate = useNavigate();
@@ -111,6 +111,7 @@ const MyParcels = () => {
             <th>Parcel</th>
             <th>Cost</th>
             <th>Payment</th>
+            <th>Delivery Status</th>
             <th>Creation Time</th>
             <th>Actions</th>
           </tr>
@@ -121,7 +122,10 @@ const MyParcels = () => {
             <tr key={parcel._id}>
               <th>{index + 1}</th>
               <td className="font-semibold text-secondary flex items-center gap-2">
-                {parcel.tracking_id}
+                <Link to={`/parcel-track/${parcel.trackingId}`}>
+                  {" "}
+                  {parcel.tracking_id}
+                </Link>
                 <button
                   onClick={() => handleCopyTracking(parcel.tracking_id)}
                   className="btn btn-xs btn-outline btn-square p-1"
@@ -155,6 +159,8 @@ const MyParcels = () => {
                   // </Link>
                 )}
               </td>
+              {/* delivery status */}
+              <td>{parcel.delivery_status}</td>
               <td>
                 {new Date(parcel.creation_date).toLocaleString("en-BD", {
                   day: "2-digit",

@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import { FaUserShield } from "react-icons/fa";
 import { GoShieldSlash } from "react-icons/go";
 import UseAxiosSecure from "../../hooks/UseAxiosSecure";
 import Swal from "sweetalert2";
 const UsersManagement = () => {
-  
+  const [searchText,setSearchText] = useState('')
   const axiosSecure = UseAxiosSecure();
   const { data: users = [], refetch } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["users",searchText],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/users`);
+      const res = await axiosSecure.get(`/users?searchText=${searchText}`);
       return res.data;
     },
   });
@@ -50,8 +50,33 @@ const UsersManagement = () => {
         })
     }
   return (
-    <div>
-      <h2 className="lg:text-5xl text-2xl">Manage users :{users.length} </h2>
+    <div >
+      <h2 className="lg:text-5xl text-2xl text-left mb-5">Manage users :{users.length} </h2>
+      {/* search users */}
+      {/* <p>text :{ searchText}</p> */}
+      <label className="input mb-5">
+        <svg
+          className="h-[1em] opacity-50"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <g
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="2.5"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </g>
+        </svg>
+        <input
+          onChange={(e)=>setSearchText(e.target.value)}
+          type="search"
+          required placeholder="Search users " />
+      </label>
+      {/* table */}
       <div className="overflow-x-auto">
         <table className="table">
           {/* head */}
@@ -80,7 +105,7 @@ const UsersManagement = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm opacity-50">
+                      <div className="text-sm font-bold">
                         {user.displayName}
                       </div>
                     </div>

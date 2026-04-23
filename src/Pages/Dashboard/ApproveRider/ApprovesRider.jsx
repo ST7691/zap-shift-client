@@ -12,13 +12,13 @@ const ApprovesRider = () => {
   const { refetch, data: riders = [] } = useQuery({
     queryKey: ["riders", "panding"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/riders",);
+      const res = await axiosSecure.get("/riders");
       return res.data;
     },
   });
   // update status rider
   const updateRiderStatus = (rider, status) => {
-    const updateInfo = { status: status ,email:rider.email};
+    const updateInfo = { status: status, email: rider.email };
     axiosSecure.patch(`/riders/${rider._id}`, updateInfo).then((res) => {
       if (res.data.modifiedCount) {
         refetch();
@@ -41,25 +41,25 @@ const ApprovesRider = () => {
   const handleRejection = (rider) => {
     updateRiderStatus(rider, "rejected");
   };
-   // Delete rider
-    const handleDelete = (id) => {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You want to delete thisRider!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, Delete",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axiosSecure.delete(`/riders/${id}`).then((res) => {
-            if (res.data.deletedCount > 0) {
-              Swal.fire("Deleted!", "Rider has been deleted.", "success");
-              refetch();
-            }
-          });
-        }
-      });
-    };
+  // Delete rider
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete thisRider!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Delete",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.delete(`/riders/${id}`).then((res) => {
+          if (res.data.deletedCount > 0) {
+            Swal.fire("Deleted!", "Rider has been deleted.", "success");
+            refetch();
+          }
+        });
+      }
+    });
+  };
   return (
     <div>
       <h2 className="lg:text-5xl text-2xl">
@@ -75,6 +75,7 @@ const ApprovesRider = () => {
               <th>Email</th>
               <th>Distric</th>
               <th>Status</th>
+              <th> Work Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -92,11 +93,10 @@ const ApprovesRider = () => {
                     {rider.status}
                   </p>
                 </td>
+                <td>{rider.workStatus}</td>
                 <td className="flex  gap-1">
                   {/* view button  */}
-                  <button
-                    className="btn btn-xs  hover:bg-primary "
-                  >
+                  <button className="btn btn-xs  hover:bg-primary ">
                     <FaEye />
                   </button>
                   {/* approved button */}
@@ -113,7 +113,7 @@ const ApprovesRider = () => {
                   >
                     <IoPersonRemove />
                   </button>
-{/* rider delete */}
+                  {/* rider delete */}
                   <button
                     className="btn btn-xs  hover:bg-primary "
                     onClick={() => handleDelete(rider._id)}

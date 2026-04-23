@@ -16,6 +16,7 @@ export const PaymentSuccess = () => {
           console.log(res.data);
           setPaymentInfo({
             transactionId: res.data.transactionId,
+            // trackingId: res.data.trackingId,
           });
         });
     }
@@ -24,6 +25,7 @@ export const PaymentSuccess = () => {
     <div>
       <h2 className="lg:text-5xl text-2xl">Payment successful</h2>
       <h3 >your transaction id : { paymentInfo.transactionId}</h3>
+      {/* <h3 >yourTracking id : { paymentInfo.trackingId}</h3> */}
     </div>
   );
 };

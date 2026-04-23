@@ -17,7 +17,12 @@ import PaymentHistory from "../Pages/Dashboard/PaymentHistory/PaymentHistory";
 import Rider from "../Pages/Rider/Rider";
 import ApprovesRider from "../Pages/Dashboard/ApproveRider/ApprovesRider";
 import UsersManagement from "../Pages/Dashboard/UsersManagement/UsersManagement";
+import AssignRiders from "../Pages/Dashboard/AssignRiders/AssignRiders";
 import AdminRoutes from "../Pages/Routes/AdminRoutes";
+import AssignDeliveris from "../Pages/Dashboard/AssignDeliveris/AssignDeliveris";
+import RiderRoutes from "../Pages/Routes/RiderRoutes";
+import ComplitedDeliveris from "../Pages/Dashboard/ComplitedDeliveris/ComplitedDeliveris";
+import ParcelTrack from "../Pages/ParcelTrack/ParcelTrack";
 
 export const router = createBrowserRouter([
   {
@@ -54,6 +59,10 @@ export const router = createBrowserRouter([
         path: "/coverage",
         Component: Coverage,
         loader: () => fetch("../../public/data/districts.json"),
+      },
+      {
+        path: "/parcel-track/:trackingId",
+        Component:ParcelTrack,
       },
     ],
   },
@@ -95,7 +104,24 @@ export const router = createBrowserRouter([
         path: "payment-cencelled",
         Component: PaymentCancelled,
       },
-      // admin routes
+      // ---------------------riders routes------------------
+      {
+        path: "assign-deliveris",
+        element: (
+          <RiderRoutes>
+            <AssignDeliveris></AssignDeliveris>
+          </RiderRoutes>
+        ),
+      },
+      {
+        path: "completed-deliveris",
+        element: (
+          <RiderRoutes>
+            <ComplitedDeliveris></ComplitedDeliveris>
+          </RiderRoutes>
+        ),
+      },
+      //------------------------------ admin routes------------------------
       {
         path: "approves-rider",
         element: (
@@ -103,14 +129,20 @@ export const router = createBrowserRouter([
             <ApprovesRider></ApprovesRider>
           </AdminRoutes>
         ),
-        // Component:ApprovesRider,
       },
       {
         path: "users-management",
-        // Component:UsersManagement,
         element: (
           <AdminRoutes>
             <UsersManagement></UsersManagement>
+          </AdminRoutes>
+        ),
+      },
+      {
+        path: "assign-riders",
+        element: (
+          <AdminRoutes>
+            <AssignRiders></AssignRiders>
           </AdminRoutes>
         ),
       },

@@ -3,7 +3,9 @@ import ZapShip from "../Shared/ZapShip";
 import { NavLink, Outlet } from "react-router";
 import { CiHome } from "react-icons/ci";
 import UseRoles from "../Pages/hooks/UseRoles";
-import { FaAddressCard, FaBiking, FaRegUser, FaShuttleVan } from "react-icons/fa";
+import { RiEBikeFill } from "react-icons/ri";
+import { FaAddressCard, FaBiking, FaRegUser, FaShuttleVan, FaTasks } from "react-icons/fa";
+import { SiGoogletasks } from "react-icons/si";
 
 const DashboardLayout = () => {
   const {role} = UseRoles();
@@ -86,7 +88,40 @@ const DashboardLayout = () => {
               <span className="is-drawer-close:hidden"> Payment History</span>
             </NavLink>
           </li>
-          {/* admin section */}
+          {/* ---------------rider role---------- */}
+          {role === "rider" && (
+            <>
+              {/* assign deliveries */}
+              <li>
+                <NavLink
+                  to={"/dashboard/assign-deliveris"}
+                  className="is-drawer-close:tooltip is-drawer-close: tooltip-right"
+                  data-tip="Assign Deliveris"
+                >
+                  <FaTasks />
+                  <span className="is-drawer-close:hidden">
+                    {" "}
+                    Assign Deliveris
+                  </span>
+                </NavLink>
+              </li>
+              {/* complited deliveries */}
+              <li>
+                <NavLink
+                  to={"/dashboard/completed-deliveris"}
+                  className="is-drawer-close:tooltip is-drawer-close: tooltip-right"
+                  data-tip="Completed Deliveris"
+                >
+                  <SiGoogletasks />
+                  <span className="is-drawer-close:hidden">
+                    {" "}
+                    Completed Deliveris
+                  </span>
+                </NavLink>
+              </li>
+            </>
+          )}
+          {/* --------------------admin section---------------------------- */}
           {role === "admin" && (
             <>
               {" "}
@@ -116,6 +151,17 @@ const DashboardLayout = () => {
                     {" "}
                     Users management
                   </span>
+                </NavLink>
+              </li>
+              {/*  assign riders */}
+              <li>
+                <NavLink
+                  to={"/dashboard/assign-riders"}
+                  className="is-drawer-close:tooltip is-drawer-close: tooltip-right"
+                  data-tip="Assign Riders"
+                >
+                  <RiEBikeFill />
+                  <span className="is-drawer-close:hidden"> Assign Riders</span>
                 </NavLink>
               </li>
             </>

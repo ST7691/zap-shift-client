@@ -19,7 +19,6 @@ const SendParcel = () => {
     handleSubmit,
     watch,
     reset,
-    formState: { errors },
   } = useForm();
 
   const servicesCenters = useLoaderData();
