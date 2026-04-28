@@ -3,10 +3,10 @@ import React, { useEffect } from "react";
 import useAuth from "./useAuth";
 import { useNavigate } from "react-router";
 const axiosSecure = axios.create({
-  baseURL: `http://localhost:5000`,
+  baseURL: `https://zap-shift-server-pi-six.vercel.app`,
 });
 const UseAxiosSecure = () => {
-   const navigate = useNavigate() 
+  const navigate = useNavigate();
   const { user, signOutUser } = useAuth();
   // axios interseptor request-------------
   useEffect(() => {
@@ -24,10 +24,9 @@ const UseAxiosSecure = () => {
         console.log(error);
         const statusCode = error.status;
         if (statusCode === 401 || statusCode === 403) {
-          signOutUser()
-            .than(() => {
+          signOutUser().than(() => {
             navigate("/signin");
-          })
+          });
         }
 
         return Promise.reject(error);
@@ -38,7 +37,7 @@ const UseAxiosSecure = () => {
       axiosSecure.interceptors.request.eject(reqInterceptor);
       axiosSecure.interceptors.response.eject(resInterceptor);
     };
-  }, [user,navigate,signOutUser]);
+  }, [user, navigate, signOutUser]);
 
   return axiosSecure;
 };

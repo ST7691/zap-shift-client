@@ -23,6 +23,7 @@ import AssignDeliveris from "../Pages/Dashboard/AssignDeliveris/AssignDeliveris"
 import RiderRoutes from "../Pages/Routes/RiderRoutes";
 import ComplitedDeliveris from "../Pages/Dashboard/ComplitedDeliveris/ComplitedDeliveris";
 import ParcelTrack from "../Pages/ParcelTrack/ParcelTrack";
+import DashboardHome from "../Pages/Dashboard/DashboardHome/DashboardHome";
 
 export const router = createBrowserRouter([
   {
@@ -39,7 +40,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/rider",
-        loader: () => fetch("../../public/data/districts.json"),
+        loader: () => fetch("/data/districts.json"),
         element: (
           <PrivetRoutes>
             <Rider></Rider>
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/sendparcel",
-        loader: () => fetch("../../public/data/districts.json"),
+        loader: () => fetch("/data/districts.json"),
         element: (
           <PrivetRoutes>
             <SendParcel></SendParcel>
@@ -58,7 +59,7 @@ export const router = createBrowserRouter([
       {
         path: "/coverage",
         Component: Coverage,
-        loader: () => fetch("../../public/data/districts.json"),
+        loader: () => fetch("/data/districts.json"),
       },
       {
         path: "/parcel-track/:trackingId",
@@ -84,6 +85,10 @@ export const router = createBrowserRouter([
       </PrivetRoutes>
     ),
     children: [
+      {
+        index: true,
+        Component:DashboardHome,
+    },
       {
         path: "myparcels",
         Component: MyParcels,

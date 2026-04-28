@@ -21,7 +21,7 @@ const SendParcel = () => {
     reset,
   } = useForm();
 
-  const servicesCenters = useLoaderData();
+  const servicesCenters = useLoaderData() || [];
 
   // Unique Regions
   const uniqueRegions = [...new Set(servicesCenters.map((w) => w.region))];

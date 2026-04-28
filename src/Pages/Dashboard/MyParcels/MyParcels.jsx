@@ -86,8 +86,9 @@ const MyParcels = () => {
         deliveryCost: parcel.deliveryCost,
         parcelId: parcel._id,
         // customer_email: parcel.created_by,
-        created_by: user.email, // 🔥 login user email
+        created_by: user.email, // login user email
         parcelName: parcel.parcelName,
+        trackingId:parcel.trackingId,
     };
     console.log("USER EMAIL:", user.email);
       try {

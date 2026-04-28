@@ -32,13 +32,12 @@ const SignUp = () => {
   //       // axios
   //    const imgRes =await axios.post(imge_API_URL, formData);
   //       const imageUrl = imgRes.data.data.url;
-        
 
   //   await updateUserProfile({
   //     displayName: data.name,
   //     photoURL: imageUrl,
   //   });
-  //   const dbRes = await axios.post("http://localhost:5000/users", {
+  //   const dbRes = await axios.post("https://zap-shift-server-pi-six.vercel.app/users", {
   //     name: data.name,
   //     email: data.email,
   //     photo: imageUrl,
@@ -80,12 +79,15 @@ const SignUp = () => {
       };
       await updateUserProfile(userInfo);
 
-      const dbRes = await axios.post("http://localhost:5000/users", {
-        displayName: data.name,
-        email: data.email,
-        photo: imageUrl,
-        // role: "user",
-      });
+      const dbRes = await axios.post(
+        "https://zap-shift-server-pi-six.vercel.app/users",
+        {
+          displayName: data.name,
+          email: data.email,
+          photo: imageUrl,
+          // role: "user",
+        },
+      );
 
       console.log("DB SUCCESS:", dbRes.data);
 

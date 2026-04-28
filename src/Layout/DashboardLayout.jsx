@@ -1,11 +1,12 @@
 import React from "react";
 import ZapShip from "../Shared/ZapShip";
-import { NavLink, Outlet } from "react-router";
+import { Link, NavLink, Outlet } from "react-router";
 import { CiHome } from "react-icons/ci";
 import UseRoles from "../Pages/hooks/UseRoles";
 import { RiEBikeFill } from "react-icons/ri";
 import { FaAddressCard, FaBiking, FaRegUser, FaShuttleVan, FaTasks } from "react-icons/fa";
 import { SiGoogletasks } from "react-icons/si";
+
 
 const DashboardLayout = () => {
   const {role} = UseRoles();
@@ -39,9 +40,9 @@ const DashboardLayout = () => {
           <div className="mx-2 flex-1 px-2 lg:hidden">Dashboard </div>
         </div>{" "}
         {/* Page content here */}
-        <div className="mb-5">
+        <div className="mb-5 pl-5">
           {" "}
-          <ZapShip></ZapShip>
+         <ZapShip></ZapShip>
         </div>
         <Outlet></Outlet>
       </div>
@@ -58,12 +59,12 @@ const DashboardLayout = () => {
           {/* home */}
           <li className=" mt-5">
             <NavLink
-              to={"/"}
+              to={"/dashboard"}
               className="is-drawer-close:tooltip is-drawer-close: tooltip-right"
-              data-tip="Home"
+              data-tip="Home page"
             >
               <CiHome />
-              <span className="is-drawer-close:hidden">Home</span>
+              <span className="is-drawer-close:hidden">Home page</span>
             </NavLink>
           </li>
           {/* my parcels */}
